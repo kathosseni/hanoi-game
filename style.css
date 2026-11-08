@@ -298,6 +298,14 @@ button:disabled {
     cursor: not-allowed;
 }
 
+#btn-reset {
+    background: #8b849f;
+}
+
+#btn-reset:hover:not(:disabled) {
+    background: #6e667f;
+}
+
 /* ==============================
    PIED DE PAGE
 ============================== */

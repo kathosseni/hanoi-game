@@ -3,9 +3,8 @@
    VARIABLES DU JEU
 ============================== */
 
-// Chaque tableau représente une tour.
-// Le dernier élément est l'anneau situé au sommet.
-
+// État du jeu : trois tableaux représentant les trois tours.
+// Le dernier élément de chaque tableau est l'anneau du dessus.
 let etatJeu = [[], [], []];
 
 let tourSelectionnee = null;
@@ -13,22 +12,30 @@ let anneauSelectionne = null;
 let tourInvalide = null;
 
 let nombreAnneaux = 0;
-
-// Gestion de la démonstration
-let demoEnCours = false;
-let jetonDemo = 0;
-
 let nombreCoups = 0;
 let score = 0;
 
-// Éléments HTML
+let demoEnCours = false;
+let jetonDemo = 0;
+
+
+/* ==============================
+   ÉLÉMENTS HTML
+============================== */
+
 const tours = document.querySelectorAll(".tour");
 const champNbAnneaux = document.querySelector("#nb-anneaux");
+
 const boutonDemarrer = document.querySelector("#btn-demarrer");
 const boutonDemo = document.querySelector("#btn-demo");
+const boutonReset = document.querySelector("#btn-reset");
+
 const message = document.querySelector("#message");
-const compteurCoups = document.getElementById("compteur-coups");
-const affichageScore = document.getElementById("score");
+
+const compteurCoups = document.querySelector("#compteur-coups");
+const affichageScore = document.querySelector("#score");
+const libelleScore = document.querySelector("#libelle-score");
+
 
 /* ==============================
    VÉRIFICATION DES DÉPLACEMENTS
@@ -36,28 +43,26 @@ const affichageScore = document.getElementById("score");
 
 function deplacementValide(de, vers) {
 
-    // Vérification des indices
-    if (de < 0 || de > 2 || vers < 0 || vers > 2) {
-        return false;
-    }
-
-    // Une tour ne peut pas être sa propre destination
-    if (de === vers) {
+    // Vérifier les indices des tours
+    if (
+        de < 0 || de > 2 ||
+        vers < 0 || vers > 2 ||
+        de === vers
+    ) {
         return false;
     }
 
     const pileDepart = etatJeu[de];
     const pileDestination = etatJeu[vers];
 
-    // La tour de départ doit contenir un anneau
+    // Vérifier que la tour de départ n'est pas vide
     if (pileDepart.length === 0) {
         return false;
     }
 
-    const anneauDeplace =
-        pileDepart[pileDepart.length - 1];
+    const anneauDeplace = pileDepart[pileDepart.length - 1];
 
-    // Une tour vide accepte n'importe quel anneau
+    // Une tour vide peut recevoir n'importe quel anneau
     if (pileDestination.length === 0) {
         return true;
     }
@@ -78,9 +83,10 @@ function rendre() {
 
     tours.forEach((tour, index) => {
 
-        // L'affichage est reconstruit depuis l'état du jeu
+        // Vider le contenu de la tour
         tour.innerHTML = "";
 
+        // Gérer la sélection et les erreurs
         tour.classList.toggle(
             "selectionnee",
             tourSelectionnee === index
@@ -91,26 +97,23 @@ function rendre() {
             tourInvalide === index
         );
 
-        // Création des anneaux de la tour
-        etatJeu[index].forEach((taille) => {
+        // Créer les anneaux à partir de l'état du jeu
+        etatJeu[index].forEach(taille => {
 
             const anneau = document.createElement("div");
 
             anneau.classList.add("anneau");
 
-            // Largeur proportionnelle à la taille
-            anneau.style.width =
-                (40 + taille * 20) + "px";
+            // Largeur proportionnelle à la taille de l'anneau
+            anneau.style.width = (40 + taille * 20) + "px";
 
             // Couleur différente selon la taille
-            const teinte = (taille * 38 + 180) % 360;
-
             anneau.style.backgroundColor =
-                `hsl(${teinte}, 70%, 60%)`;
+                `hsl(${260 - taille * 20}, 65%, 70%)`;
 
-            // Mise en évidence de l'anneau sélectionné
+            // Mettre en évidence uniquement l'anneau du dessus
             if (
-                tourSelectionnee === index &&
+                index === tourSelectionnee &&
                 taille === anneauSelectionne
             ) {
                 anneau.classList.add("selectionne");
@@ -123,151 +126,12 @@ function rendre() {
 
 
 /* ==============================
-   DÉMARRAGE / RÉINITIALISATION
+   COMPTEUR ET SCORE
 ============================== */
 
-function demarrer() {
-
-    // Invalidation d'une éventuelle démonstration en cours
-    jetonDemo++;
-
-    demoEnCours = false;
-    boutonDemo.disabled = false;
-
-    // Réinitialisation du compteur de coups
-    nombreCoups = 0;
-    compteurCoups.textContent = nombreCoups;
-    score = 0;
-    affichageScore.textContent = "—";
-
-    // Lecture du nombre d'anneaux
-    let valeur = parseInt(champNbAnneaux.value, 10);
-
-    if (Number.isNaN(valeur)) {
-        valeur = 3;
-    }
-
-    // Limitation entre 1 et 8
-    nombreAnneaux = Math.max(1, Math.min(8, valeur));
-
-    champNbAnneaux.value = nombreAnneaux;
-
-    // Réinitialisation des trois tours
-    etatJeu = [[], [], []];
-
-    // Tous les anneaux sont placés sur la première tour
-    for (let i = nombreAnneaux; i >= 1; i--) {
-        etatJeu[0].push(i);
-    }
-
-    // Réinitialisation des sélections
-    tourSelectionnee = null;
-    anneauSelectionne = null;
-    tourInvalide = null;
-
-    message.textContent =
-        "Partie démarrée ! Déplacez les anneaux vers la troisième tour.";
-
-    rendre();
-}
-
-
-/* ==============================
-   DÉPLACEMENTS MANUELS
-============================== */
-
-function cliquerTour(index) {
-
-    // Les clics sont ignorés pendant la démonstration
-    if (demoEnCours) {
-        return;
-    }
-
-    tourInvalide = null;
-
-    const pile = etatJeu[index];
-
-    // Aucun anneau n'est sélectionné
-    if (tourSelectionnee === null) {
-
-        // La tour est vide
-        if (pile.length === 0) {
-
-            if (nombreAnneaux === 0) {
-                message.textContent =
-                    "Cette tour est vide. Cliquez sur Démarrer pour jouer.";
-            } else {
-                message.textContent =
-                    "Cette tour est vide.";
-            }
-
-            rendre();
-            return;
-        }
-
-        // Sélection du dernier anneau de la pile
-        tourSelectionnee = index;
-        anneauSelectionne = pile[pile.length - 1];
-
-        message.textContent =
-            "Anneau sélectionné. Choisissez une tour de destination.";
-
-        rendre();
-        return;
-    }
-
-    // Un clic sur la même tour annule la sélection
-    if (tourSelectionnee === index) {
-
-        tourSelectionnee = null;
-        anneauSelectionne = null;
-
-        message.textContent = "Sélection annulée.";
-
-        rendre();
-        return;
-    }
-
-    // Vérification de la validité du déplacement
-    if (!deplacementValide(tourSelectionnee, index)) {
-
-        tourInvalide = index;
-
-        message.textContent =
-            "Déplacement impossible ! Un grand anneau ne peut pas être posé sur un plus petit.";
-
-        rendre();
-        return;
-    }
-
-    // Déplacement de l'anneau
-    const anneau = etatJeu[tourSelectionnee].pop();
-
-    etatJeu[index].push(anneau);
-
-    // Increment du compteur de coups
-    nombreCoups++;
-    compteurCoups.textContent = nombreCoups;
-    afficherScore();
-    
-
-    // Réinitialisation de la sélection
-    tourSelectionnee = null;
-    anneauSelectionne = null;
-    tourInvalide = null;
-
-    message.textContent = "Déplacement effectué !";
-
-    rendre();
-
-    verifierVictoire();
-}
-
-// ==============================
-// CALCUL DU SCORE
-// ==============================
-
+// Calculer le score en fonction du nombre minimal de coups
 function calculerScore() {
+
     const coupsMinimum = Math.pow(2, nombreAnneaux) - 1;
 
     if (nombreCoups === 0) {
@@ -279,13 +143,318 @@ function calculerScore() {
     return score;
 }
 
+
+// Afficher le score
 function afficherScore() {
+
     const resultat = calculerScore();
 
     affichageScore.textContent =
         nombreCoups === 0
             ? "—"
             : resultat.toFixed(1) + " %";
+}
+
+
+// Enregistrer un déplacement valide
+function enregistrerCoup() {
+
+    nombreCoups++;
+
+    compteurCoups.textContent = nombreCoups;
+
+    afficherScore();
+}
+
+
+/* ==============================
+   DÉMARRER UNE NOUVELLE PARTIE
+============================== */
+
+function demarrer() {
+
+    // Interrompre une éventuelle démonstration
+    jetonDemo++;
+    demoEnCours = false;
+
+    boutonDemo.disabled = false;
+
+    // Lire et limiter le nombre d'anneaux entre 1 et 8
+    nombreAnneaux = parseInt(champNbAnneaux.value, 10);
+
+    if (isNaN(nombreAnneaux)) {
+        nombreAnneaux = 3;
+    }
+
+    nombreAnneaux = Math.max(1, Math.min(8, nombreAnneaux));
+
+    champNbAnneaux.value = nombreAnneaux;
+
+    // Réinitialiser les trois tours
+    etatJeu = [[], [], []];
+
+    // Placer tous les anneaux sur la première tour
+    for (let i = nombreAnneaux; i >= 1; i--) {
+        etatJeu[0].push(i);
+    }
+
+    // Réinitialiser les sélections
+    tourSelectionnee = null;
+    anneauSelectionne = null;
+    tourInvalide = null;
+
+    // Réinitialiser le compteur
+    nombreCoups = 0;
+    compteurCoups.textContent = nombreCoups;
+
+    // Réinitialiser le score
+    score = 0;
+    affichageScore.textContent = "—";
+    libelleScore.textContent = "Score :";
+
+    // Afficher le message
+    message.textContent =
+        "Nouvelle partie ! Déplacez les anneaux vers la troisième tour.";
+
+    rendre();
+}
+
+
+/* ==============================
+   JEU MANUEL
+============================== */
+
+function cliquerTour(index) {
+
+    // Ignorer les clics pendant la démonstration
+    if (demoEnCours) {
+        return;
+    }
+
+    tourInvalide = null;
+
+    const pile = etatJeu[index];
+
+    // Aucun anneau n'est actuellement sélectionné
+    if (tourSelectionnee === null) {
+
+        // Empêcher la sélection d'une tour vide
+        if (pile.length === 0) {
+
+            if (nombreAnneaux === 0) {
+                message.textContent =
+                    "Cette tour est vide. Cliquez sur Démarrer pour jouer.";
+            } else {
+                message.textContent = "Cette tour est vide.";
+            }
+
+            rendre();
+            return;
+        }
+
+        // Sélectionner uniquement l'anneau du dessus
+        anneauSelectionne = pile[pile.length - 1];
+
+        tourSelectionnee = index;
+
+        message.textContent =
+            "Anneau sélectionné. Choisissez une tour de destination.";
+
+        rendre();
+        return;
+    }
+
+    // Cliquer à nouveau sur la tour sélectionnée annule la sélection
+    if (tourSelectionnee === index) {
+
+        tourSelectionnee = null;
+        anneauSelectionne = null;
+
+        message.textContent = "Sélection annulée.";
+
+        rendre();
+        return;
+    }
+
+    // Vérifier si le déplacement est autorisé
+    if (!deplacementValide(tourSelectionnee, index)) {
+
+        tourInvalide = index;
+
+        message.textContent =
+            "Déplacement impossible ! Un grand anneau ne peut pas être posé sur un plus petit.";
+
+        rendre();
+        return;
+    }
+
+    // Effectuer le déplacement
+    const anneau = etatJeu[tourSelectionnee].pop();
+
+    etatJeu[index].push(anneau);
+
+    // Incrémenter le compteur et actualiser le score
+    enregistrerCoup();
+
+    // Réinitialiser les sélections
+    tourSelectionnee = null;
+    anneauSelectionne = null;
+    tourInvalide = null;
+
+    message.textContent = "Déplacement effectué !";
+
+    rendre();
+
+    // Vérifier si la partie est terminée
+    verifierVictoire();
+}
+
+
+/* ==============================
+   CALCUL RÉCURSIF DE LA SOLUTION
+============================== */
+
+function resoudre(n, de, vers, via) {
+
+    const coups = [];
+
+    function deplacer(nombre, depart, arrivee, intermediaire) {
+
+        // Cas de base : déplacer un seul anneau
+        if (nombre === 1) {
+
+            coups.push([depart, arrivee]);
+
+            return;
+        }
+
+        // Déplacer n - 1 anneaux vers la tour intermédiaire
+        deplacer(
+            nombre - 1,
+            depart,
+            intermediaire,
+            arrivee
+        );
+
+        // Déplacer le plus grand anneau vers la destination
+        coups.push([depart, arrivee]);
+
+        // Déplacer les n - 1 anneaux vers la destination
+        deplacer(
+            nombre - 1,
+            intermediaire,
+            arrivee,
+            depart
+        );
+    }
+
+    deplacer(n, de, vers, via);
+
+    return coups;
+}
+
+
+/* ==============================
+   ATTENTE ENTRE LES DÉPLACEMENTS
+============================== */
+
+function attendre(delai) {
+
+    return new Promise(resolve => {
+        setTimeout(resolve, delai);
+    });
+}
+
+
+/* ==============================
+   REJOUER LA SOLUTION
+============================== */
+
+async function rejouer(coups) {
+
+    // Mémoriser le jeton de cette démonstration
+    const monJeton = jetonDemo;
+
+    for (let i = 0; i < coups.length; i++) {
+
+        // Attendre avant chaque déplacement
+        await attendre(650);
+
+        // Vérifier si la démonstration a été interrompue
+        if (monJeton !== jetonDemo) {
+            return false;
+        }
+
+        const [de, vers] = coups[i];
+
+        // Vérifier le déplacement
+        if (!deplacementValide(de, vers)) {
+
+            message.textContent =
+                "Erreur : déplacement invalide pendant la démonstration.";
+
+            return false;
+        }
+
+        // Effectuer le déplacement
+        const anneau = etatJeu[de].pop();
+
+        etatJeu[vers].push(anneau);
+
+        // Incrémenter le compteur et actualiser le score
+        enregistrerCoup();
+
+        // Afficher la progression
+        message.textContent =
+            `Démonstration : coup ${i + 1} sur ${coups.length}`;
+
+        rendre();
+    }
+
+    return true;
+}
+
+
+/* ==============================
+   DÉMONSTRATION AUTOMATIQUE
+============================== */
+
+async function lancerDemo() {
+
+    if (demoEnCours) {
+        return;
+    }
+
+    // Démarrer une nouvelle partie
+    demarrer();
+
+    demoEnCours = true;
+
+    boutonDemo.disabled = true;
+
+    // Calculer la liste des déplacements
+    const coups = resoudre(nombreAnneaux, 0, 2, 1);
+
+    message.textContent =
+        `Début de la démonstration : ${coups.length} coups à effectuer.`;
+
+    // Exécuter les déplacements
+    const termine = await rejouer(coups);
+
+    // Si une autre action a interrompu la démonstration,
+    // ne pas modifier l'état du nouveau jeu
+    if (!demoEnCours) {
+        return;
+    }
+
+    demoEnCours = false;
+
+    boutonDemo.disabled = false;
+
+    // Vérifier la victoire si la démonstration est terminée
+    if (termine) {
+        verifierVictoire();
+    }
 }
 
 
@@ -300,182 +469,89 @@ function verifierVictoire() {
         etatJeu[2].length === nombreAnneaux
     ) {
 
-        message.textContent =
-            "🎉 Félicitations ! Vous avez résolu les Tours de Hanoï !";
+        // Transformer le score en score final
+        libelleScore.textContent = "Score final :";
 
-        tourSelectionnee = null;
-        anneauSelectionne = null;
-
-        rendre();
-    }
-}
-
-
-/* ==============================
-   CALCUL DE LA SOLUTION
-============================== */
-
-// Cette fonction calcule uniquement la liste des coups.
-// Elle ne modifie ni etatJeu ni le DOM.
-//
-// Chaque coup est un tableau : [tourDepart, tourArrivee].
-
-function resoudre(n, de, vers, via) {
-
-    const coups = [];
-
-    function deplacer(nombre, depart, arrivee, intermediaire) {
-
-        // Cas de base : un seul anneau
-        if (nombre === 1) {
-
-            coups.push([depart, arrivee]);
-
-            return;
-        }
-
-        // Étape 1 : déplacer les anneaux supérieurs vers la tour intermédiaire
-        deplacer(
-            nombre - 1,
-            depart,
-            intermediaire,
-            arrivee
-        );
-
-        // Étape 2 : déplacer le plus grand anneau vers la destination
-        coups.push([depart, arrivee]);
-
-        // Étape 3 : déplacer les anneaux intermédiaires vers la destination
-        deplacer(
-            nombre - 1,
-            intermediaire,
-            arrivee,
-            depart
-        );
-    }
-
-    // Calcul de la solution
-    deplacer(n, de, vers, via);
-
-    return coups;
-}
-
-
-/* ==============================
-   FONCTION D'ATTENTE
-============================== */
-
-function attendre(delai) {
-
-    return new Promise(resolve => {
-        setTimeout(resolve, delai);
-    });
-}
-
-
-/* ==============================
-   REJEU DES COUPS
-============================== */
-
-// Cette fonction reçoit une liste de coups déjà calculée.
-// Elle les exécute un par un avec un délai.
-
-async function rejouer(coups) {
-
-    const monJeton = jetonDemo;
-
-    for (let i = 0; i < coups.length; i++) {
-
-        // Pause entre deux déplacements
-        await attendre(650);
-
-        // Arrêt si la démonstration a été annulée
-        if (monJeton !== jetonDemo) {
-            return false;
-        }
-
-        const [de, vers] = coups[i];
-
-        // Vérification de la règle du jeu
-        if (!deplacementValide(de, vers)) {
-            return false;
-        }
-
-        // Déplacement réel dans l'état du jeu
-        const anneau = etatJeu[de].pop();
-
-        etatJeu[vers].push(anneau);
-
-        // Increment du compteur de coups
-        nombreCoups++;
-        compteurCoups.textContent = nombreCoups;
+        // Actualiser le score
         afficherScore();
 
-        // Affichage de la progression
+        // Message de victoire
         message.textContent =
-            `Démonstration : coup ${i + 1} sur ${coups.length}`;
+            `🎉 Félicitations ! Vous avez résolu les Tours de Hanoï en ${nombreCoups} coups !`;
 
-        // Actualisation visuelle
+        // Effacer les sélections
+        tourSelectionnee = null;
+        anneauSelectionne = null;
+        tourInvalide = null;
+
         rendre();
     }
-
-    return true;
 }
 
 
 /* ==============================
-   LANCEMENT DE LA DÉMONSTRATION
+   RÉINITIALISATION DU JEU
 ============================== */
 
-async function lancerDemo() {
+function reset() {
 
-    // Empêche plusieurs démonstrations simultanées
-    if (demoEnCours) {
-        return;
-    }
-
-    // Démarre une nouvelle partie
-    demarrer();
-
-    demoEnCours = true;
-    boutonDemo.disabled = true;
-
-    // Calcule la liste des coups
-    const coups = resoudre(
-        nombreAnneaux,
-        0,
-        2,
-        1
-    );
-
-    message.textContent =
-        `Début de la démonstration : ${coups.length} coups à effectuer.`;
-
-    // Rejoue les coups calculés
-    const termine = await rejouer(coups);
-
-    // Vérifie si la démonstration a été annulée
-    if (!termine) {
-        return;
-    }
+    // Interrompre une éventuelle démonstration
+    jetonDemo++;
 
     demoEnCours = false;
+
     boutonDemo.disabled = false;
 
-    // Vérification de la victoire
-    verifierVictoire();
+    // Réinitialiser les tours
+    etatJeu = [[], [], []];
+
+    // Remettre les anneaux sur la première tour
+    for (let i = nombreAnneaux; i >= 1; i--) {
+        etatJeu[0].push(i);
+    }
+
+    // Réinitialiser les sélections
+    tourSelectionnee = null;
+    anneauSelectionne = null;
+    tourInvalide = null;
+
+    // Réinitialiser le compteur
+    nombreCoups = 0;
+    compteurCoups.textContent = nombreCoups;
+
+    // Réinitialiser le score
+    score = 0;
+    affichageScore.textContent = "—";
+    libelleScore.textContent = "Score :";
+
+    // Afficher le message adapté
+    if (nombreAnneaux > 0) {
+
+        message.textContent =
+            "Jeu réinitialisé. Vous pouvez recommencer !";
+
+    } else {
+
+        message.textContent =
+            "Choisissez le nombre d'anneaux puis cliquez sur Démarrer.";
+    }
+
+    rendre();
 }
 
 
 /* ==============================
-   ÉCOUTEURS D'ÉVÉNEMENTS
+   ÉVÉNEMENTS
 ============================== */
 
-// Bouton de démarrage
+// Bouton Démarrer
 boutonDemarrer.addEventListener("click", demarrer);
 
-// Bouton de démonstration
+// Bouton Démo automatique
 boutonDemo.addEventListener("click", lancerDemo);
+
+// Bouton Reset
+boutonReset.addEventListener("click", reset);
 
 // Clics sur les trois tours
 tours.forEach((tour, index) => {
@@ -483,12 +559,7 @@ tours.forEach((tour, index) => {
     tour.addEventListener("click", () => {
         cliquerTour(index);
     });
-
 });
 
-
-/* ==============================
-   INITIALISATION
-============================== */
-
+// Affichage initial
 rendre();
