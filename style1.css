@@ -339,3 +339,25 @@ footer {
         animation: none !important;
     }
 }
+
+#btn-demo {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #8b7bd8;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+#btn-demo:hover:not(:disabled) {
+    background: #7665c5;
+    transform: translateY(-2px);
+}
+
+#btn-demo:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

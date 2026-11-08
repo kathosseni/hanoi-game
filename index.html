@@ -1,16 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Les Tours de Hanoï</title>
-    <link rel="stylesheet" href="style1.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
 
     <header>
         <h1>Les Tours de Hanoï</h1>
-        <p class="sous-titre">Déplacez tous les anneaux vers la troisième tour.</p>
+        <p class="sous-titre">Un jeu de logique et de réflexion</p>
     </header>
 
     <main class="conteneur">
@@ -18,66 +20,69 @@
         <section class="jeu">
 
             <div class="instructions">
-                <span class="icone">🎯</span>
-                <p>Un seul anneau à la fois. Un grand anneau ne peut jamais recouvrir un petit.</p>
+                <span class="icone">💡</span>
+                <p>
+                    Déplacez tous les anneaux de la première tour
+                    vers la troisième. Vous ne pouvez jamais poser
+                    un grand anneau sur un plus petit.
+                </p>
             </div>
 
             <div id="plateau">
 
                 <div class="zone-tour">
-                    <div class="numero-tour">01</div>
+                    <div class="numero-tour">1</div>
                     <div class="tour" id="tour-1" data-index="0"></div>
-                    <span class="nom-tour">Départ</span>
+                    <div class="nom-tour">Départ</div>
                 </div>
 
                 <div class="zone-tour">
-                    <div class="numero-tour">02</div>
+                    <div class="numero-tour">2</div>
                     <div class="tour" id="tour-2" data-index="1"></div>
-                    <span class="nom-tour">Intermédiaire</span>
+                    <div class="nom-tour">Intermédiaire</div>
                 </div>
 
                 <div class="zone-tour">
-                    <div class="numero-tour">03</div>
+                    <div class="numero-tour">3</div>
                     <div class="tour" id="tour-3" data-index="2"></div>
-                    <span class="nom-tour">Arrivée</span>
+                    <div class="nom-tour">Arrivée</div>
                 </div>
 
             </div>
 
             <div class="zone-message">
                 <p id="message" aria-live="polite">
-                    Cliquez sur Démarrer pour commencer à jouer.
+                    Choisissez le nombre d'anneaux puis cliquez sur Démarrer.
                 </p>
             </div>
 
-        </section>
+            <div class="parametres">
 
-        <section class="parametres">
+                <div class="parametre">
+                    <label for="nb-anneaux">Nombre d'anneaux :</label>
+                    <input
+                        type="number"
+                        id="nb-anneaux"
+                        min="1"
+                        max="8"
+                        value="3"
+                    >
+                </div>
 
-            <div class="parametre">
-                <label for="nb-anneaux">Nombre d'anneaux</label>
+                <div class="boutons">
+                    <button id="btn-demarrer">↻ Démarrer</button>
+                    <button id="btn-demo">▶ Démo automatique</button>
+                </div>
 
-                <input
-                    type="number"
-                    id="nb-anneaux"
-                    min="1"
-                    max="8"
-                    value="3"
-                >
             </div>
 
-            <button id="btn-demarrer">
-                <span>↻</span> Démarrer
-            </button>
-
         </section>
-
-        <footer>
-            <p>Les Tours de Hanoï · Jeu de réflexion</p>
-        </footer>
 
     </main>
 
-    <script src="script.js"></script>
+    <footer>
+        <p>Jeu des Tours de Hanoï</p>
+    </footer>
+
 </body>
 </html>
