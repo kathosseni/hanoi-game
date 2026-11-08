@@ -19,6 +19,7 @@ let demoEnCours = false;
 let jetonDemo = 0;
 
 let nombreCoups = 0;
+let score = 0;
 
 // Éléments HTML
 const tours = document.querySelectorAll(".tour");
@@ -27,7 +28,7 @@ const boutonDemarrer = document.querySelector("#btn-demarrer");
 const boutonDemo = document.querySelector("#btn-demo");
 const message = document.querySelector("#message");
 const compteurCoups = document.getElementById("compteur-coups");
-
+const affichageScore = document.getElementById("score");
 
 /* ==============================
    VÉRIFICATION DES DÉPLACEMENTS
@@ -136,6 +137,8 @@ function demarrer() {
     // Réinitialisation du compteur de coups
     nombreCoups = 0;
     compteurCoups.textContent = nombreCoups;
+    score = 0;
+    affichageScore.textContent = "—";
 
     // Lecture du nombre d'anneaux
     let valeur = parseInt(champNbAnneaux.value, 10);
@@ -245,6 +248,7 @@ function cliquerTour(index) {
     // Increment du compteur de coups
     nombreCoups++;
     compteurCoups.textContent = nombreCoups;
+    afficherScore();
     
 
     // Réinitialisation de la sélection
@@ -257,6 +261,31 @@ function cliquerTour(index) {
     rendre();
 
     verifierVictoire();
+}
+
+// ==============================
+// CALCUL DU SCORE
+// ==============================
+
+function calculerScore() {
+    const coupsMinimum = Math.pow(2, nombreAnneaux) - 1;
+
+    if (nombreCoups === 0) {
+        score = 0;
+    } else {
+        score = (coupsMinimum / nombreCoups) * 100;
+    }
+
+    return score;
+}
+
+function afficherScore() {
+    const resultat = calculerScore();
+
+    affichageScore.textContent =
+        nombreCoups === 0
+            ? "—"
+            : resultat.toFixed(1) + " %";
 }
 
 
@@ -380,6 +409,7 @@ async function rejouer(coups) {
         // Increment du compteur de coups
         nombreCoups++;
         compteurCoups.textContent = nombreCoups;
+        afficherScore();
 
         // Affichage de la progression
         message.textContent =
