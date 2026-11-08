@@ -190,7 +190,9 @@ function cliquerTour(index) {
     if (tourSelectionnee === null) {
 
         if (pile.length === 0) {
-            message.textContent = "Cette tour est vide.";
+            message.textContent =
+                "Cette tour est vide. Cliquez sur Démarrer pour commencer à jouer.";
+
             rendre();
             return;
         }
