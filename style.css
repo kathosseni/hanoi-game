@@ -38,6 +38,7 @@ h1 {
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
+    cursor: pointer;
 }
 
 .tour::before {
@@ -49,6 +50,7 @@ h1 {
     background-color: #795548;
     border-radius: 5px 5px 0 0;
     z-index: 0;
+    pointer-events: none;
 }
 
 .anneau {
@@ -58,6 +60,18 @@ h1 {
     border-radius: 10px;
     border: 1px solid #fff;
     flex-shrink: 0;
+    transition: transform 0.15s ease;
+    cursor: pointer;
+}
+
+.anneau.selectionne {
+    transform: translateY(-12px);
+    outline: 3px solid #333;
+    outline-offset: 2px;
+}
+
+.tour.selectionnee {
+    background-color: #f0f8ff;
 }
 
 .commandes {
@@ -91,4 +105,25 @@ button {
 
 button:hover {
     background-color: #2980b9;
+}
+
+#message {
+    margin-top: 20px;
+    min-height: 24px;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    #plateau {
+        gap: 5px;
+        padding: 10px;
+    }
+
+    .tour {
+        width: 33%;
+    }
 }

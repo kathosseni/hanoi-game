@@ -12,9 +12,9 @@
 
     <main>
         <div id="plateau">
-            <div class="tour" id="tour-1"></div>
-            <div class="tour" id="tour-2"></div>
-            <div class="tour" id="tour-3"></div>
+            <div class="tour" id="tour-1" data-index="0"></div>
+            <div class="tour" id="tour-2" data-index="1"></div>
+            <div class="tour" id="tour-3" data-index="2"></div>
         </div>
 
         <div class="commandes">
@@ -30,6 +30,10 @@
 
             <button id="btn-demarrer">Démarrer</button>
         </div>
+
+        <p id="message" aria-live="polite">
+            Cliquez sur Démarrer pour commencer.
+        </p>
     </main>
 
     <script src="script.js"></script>
