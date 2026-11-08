@@ -1,0 +1,341 @@
+
+/* ==========================================
+   STYLE 1 : ÉLÉGANT ET PASTEL
+========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #f5f3ff, #eef6ff);
+    color: #34415c;
+    padding: 35px 16px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: clamp(27px, 5vw, 40px);
+    color: #55518b;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.sous-titre {
+    color: #9295ae;
+    font-size: 15px;
+}
+
+.conteneur {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding: 30px;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid #e9e5f5;
+    border-radius: 24px;
+    box-shadow: 0 15px 45px rgba(100, 90, 150, 0.10);
+}
+
+.instructions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    margin-bottom: 30px;
+    border-radius: 14px;
+    background: #f0efff;
+    color: #7772a8;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.icone {
+    font-size: 23px;
+}
+
+#plateau {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    gap: 12px;
+    width: 100%;
+    min-height: 320px;
+    padding: 25px 10px 15px;
+    background: #faf9ff;
+    border: 1px solid #efedf8;
+    border-radius: 18px;
+}
+
+.zone-tour {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.numero-tour {
+    color: #b7b2d3;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.nom-tour {
+    margin-top: 15px;
+    color: #8582a4;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.tour {
+    position: relative;
+    width: 100%;
+    max-width: 220px;
+    height: 220px;
+    border-bottom: 10px solid #aaa6ca;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s;
+}
+
+.tour::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 9px;
+    height: 200px;
+    background: linear-gradient(to right, #aaa6ca, #d1cee5);
+    border-radius: 6px 6px 0 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.tour.selectionnee {
+    background: #eeeaff;
+    border-bottom-color: #8175d8;
+}
+
+.tour.selectionnee::before {
+    background: #8175d8;
+}
+
+.tour.invalide {
+    background: #ffe9ed;
+    border-bottom-color: #e87991;
+}
+
+.tour.invalide::before {
+    background: #e87991;
+}
+
+.anneau {
+    position: relative;
+    z-index: 1;
+    height: 20px;
+    max-width: 95%;
+    flex-shrink: 0;
+    border: 2px solid rgba(255,255,255,0.8);
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(70,60,120,0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.anneau.selectionne {
+    transform: translateY(-12px) scale(1.06);
+    outline: 3px solid #766bc7;
+    outline-offset: 3px;
+    box-shadow: 0 8px 16px rgba(118,107,199,0.3);
+}
+
+.zone-message {
+    min-height: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 15px 5px;
+}
+
+#message {
+    color: #7772a8;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.parametres {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 22px;
+    background: #f8f7ff;
+    border: 1px solid #efedf8;
+    border-radius: 16px;
+}
+
+.parametre {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+label {
+    color: #7772a8;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+input {
+    width: 100px;
+    padding: 11px;
+    font-size: 16px;
+    text-align: center;
+    color: #55518b;
+    background: white;
+    border: 1px solid #dcd8ee;
+    border-radius: 9px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #9186dc;
+    box-shadow: 0 0 0 3px rgba(145,134,220,0.15);
+}
+
+button {
+    padding: 12px 25px;
+    color: white;
+    background: linear-gradient(135deg, #9186dc, #7468bd);
+    border: none;
+    border-radius: 9px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 12px rgba(116,104,189,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(116,104,189,0.3);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+button span {
+    margin-right: 5px;
+}
+
+footer {
+    margin-top: 25px;
+    text-align: center;
+    color: #aaa5c4;
+    font-size: 12px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+    body {
+        padding: 20px 10px;
+    }
+
+    .conteneur {
+        padding: 18px 12px;
+    }
+
+    #plateau {
+        min-height: 280px;
+        padding: 20px 5px 12px;
+    }
+
+    .tour {
+        height: 190px;
+    }
+
+    .tour::before {
+        height: 170px;
+    }
+}
+
+@media (max-width: 450px) {
+    body {
+        padding: 15px 7px;
+    }
+
+    .conteneur {
+        padding: 14px 8px;
+        border-radius: 15px;
+    }
+
+    .instructions {
+        font-size: 12px;
+        padding: 12px 8px;
+        margin-bottom: 20px;
+    }
+
+    #plateau {
+        min-height: 245px;
+        gap: 2px;
+        padding: 15px 2px 10px;
+    }
+
+    .tour {
+        height: 160px;
+        border-bottom-width: 8px;
+    }
+
+    .tour::before {
+        height: 145px;
+        width: 7px;
+    }
+
+    .anneau {
+        height: 16px;
+    }
+
+    .nom-tour {
+        font-size: 10px;
+    }
+
+    .parametres {
+        gap: 12px;
+        padding: 15px 8px;
+    }
+
+    button {
+        padding: 12px 16px;
+        font-size: 13px;
+    }
+
+    #message {
+        font-size: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}

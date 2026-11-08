@@ -1,0 +1,367 @@
+
+/* ==========================================
+   STYLE 2 : ARCADE / NÉON
+========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: radial-gradient(ellipse at top, #19264a, #080d1d 75%);
+    color: #e5f4ff;
+    padding: 35px 16px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: clamp(27px, 5vw, 42px);
+    color: #61eaff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px rgba(50,220,255,0.65);
+    margin-bottom: 10px;
+}
+
+.sous-titre {
+    color: #9baecb;
+    font-size: 15px;
+}
+
+.conteneur {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+    padding: 30px;
+    background: rgba(15,25,52,0.95);
+    border: 1px solid #263d68;
+    border-radius: 20px;
+    box-shadow: 0 0 35px rgba(0,190,255,0.12);
+}
+
+.instructions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    background: #101f40;
+    border: 1px solid #24446e;
+    color: #9bdaf2;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.icone {
+    font-size: 23px;
+}
+
+#plateau {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    gap: 12px;
+    width: 100%;
+    min-height: 320px;
+    padding: 25px 10px 15px;
+    background: #0a142b;
+    border: 1px solid #25466f;
+    border-radius: 15px;
+    box-shadow: inset 0 0 25px rgba(0,180,255,0.08);
+}
+
+.zone-tour {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.numero-tour {
+    color: #4b799e;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.nom-tour {
+    margin-top: 15px;
+    color: #83a9d0;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.tour {
+    position: relative;
+    width: 100%;
+    max-width: 220px;
+    height: 220px;
+    border-bottom: 10px solid #16bce5;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s;
+}
+
+.tour::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 9px;
+    height: 200px;
+    background: linear-gradient(to right, #087dba, #42eaff);
+    border-radius: 6px 6px 0 0;
+    box-shadow: 0 0 12px rgba(30,210,255,0.5);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Tour sélectionnée */
+
+.tour.selectionnee {
+    background: rgba(0,210,255,0.10);
+    border-bottom-color: #75f5ff;
+    box-shadow: 0 0 18px rgba(0,220,255,0.25);
+}
+
+.tour.selectionnee::before {
+    background: #75f5ff;
+    box-shadow: 0 0 18px #00dfff;
+}
+
+/* Tour invalide */
+
+.tour.invalide {
+    background: rgba(255,40,90,0.13);
+    border-bottom-color: #ff416c;
+    box-shadow: 0 0 18px rgba(255,40,90,0.3);
+}
+
+.tour.invalide::before {
+    background: #ff416c;
+    box-shadow: 0 0 15px #ff416c;
+}
+
+/* Anneaux */
+
+.anneau {
+    position: relative;
+    z-index: 1;
+    height: 20px;
+    max-width: 95%;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0,220,255,0.25);
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+}
+
+/* Anneau sélectionné */
+
+.anneau.selectionne {
+    transform: translateY(-13px) scale(1.07);
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+    filter: brightness(1.25);
+    box-shadow: 0 0 12px #fff, 0 0 25px #00eaff;
+}
+
+/* Messages */
+
+.zone-message {
+    min-height: 65px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 15px 5px;
+}
+
+#message {
+    color: #6deaff;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    text-shadow: 0 0 8px rgba(0,220,255,0.3);
+}
+
+/* Paramètres */
+
+.parametres {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 22px;
+    background: #101d39;
+    border: 1px solid #263e66;
+    border-radius: 14px;
+}
+
+.parametre {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+label {
+    color: #9bbbd8;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+input {
+    width: 100px;
+    padding: 11px;
+    font-size: 16px;
+    text-align: center;
+    color: #72edff;
+    background: #09142b;
+    border: 1px solid #247da7;
+    border-radius: 8px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #5beaff;
+    box-shadow: 0 0 12px rgba(0,220,255,0.3);
+}
+
+/* Bouton */
+
+button {
+    padding: 12px 25px;
+    color: white;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    border: 1px solid #c084fc;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(168,85,247,0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(168,85,247,0.65);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+button span {
+    margin-right: 5px;
+}
+
+/* Pied de page */
+
+footer {
+    margin-top: 25px;
+    text-align: center;
+    color: #526b91;
+    font-size: 12px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+    body {
+        padding: 20px 10px;
+    }
+
+    .conteneur {
+        padding: 18px 12px;
+    }
+
+    #plateau {
+        min-height: 280px;
+        padding: 20px 5px 12px;
+    }
+
+    .tour {
+        height: 190px;
+    }
+
+    .tour::before {
+        height: 170px;
+    }
+}
+
+@media (max-width: 450px) {
+    body {
+        padding: 15px 7px;
+    }
+
+    .conteneur {
+        padding: 14px 8px;
+        border-radius: 15px;
+    }
+
+    .instructions {
+        font-size: 12px;
+        padding: 12px 8px;
+        margin-bottom: 20px;
+    }
+
+    #plateau {
+        min-height: 245px;
+        gap: 2px;
+        padding: 15px 2px 10px;
+    }
+
+    .tour {
+        height: 160px;
+        border-bottom-width: 8px;
+    }
+
+    .tour::before {
+        height: 145px;
+        width: 7px;
+    }
+
+    .anneau {
+        height: 16px;
+    }
+
+    .nom-tour {
+        font-size: 10px;
+    }
+
+    .parametres {
+        gap: 12px;
+        padding: 15px 8px;
+    }
+
+    button {
+        padding: 12px 16px;
+        font-size: 13px;
+    }
+
+    #message {
+        font-size: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}

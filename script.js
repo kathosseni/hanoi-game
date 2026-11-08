@@ -23,7 +23,7 @@ let anneauSelectionne = null;
 let tourInvalide = null;
 
 // Nombre initial d'anneaux.
-let nombreAnneaux = 3;
+let nombreAnneaux = 0;
 
 // ==========================================
 // RÉFÉRENCES HTML
@@ -190,8 +190,13 @@ function cliquerTour(index) {
     if (tourSelectionnee === null) {
 
         if (pile.length === 0) {
-            message.textContent =
-                "Cette tour est vide. Cliquez sur Démarrer pour commencer à jouer.";
+
+            if (nombreAnneaux === 0) {
+                message.textContent =
+                    "Cette tour est vide. Cliquez sur Démarrer pour jouer.";
+            } else {
+                message.textContent = "Cette tour est vide.";
+            }
 
             rendre();
             return;
