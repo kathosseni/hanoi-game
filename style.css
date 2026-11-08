@@ -77,6 +77,24 @@ h1 {
 }
 
 /* ==============================
+   COMPTEUR DE COUPS
+============================== */
+
+.compteur {
+    margin: 15px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #6651a3;
+    text-align: center;
+}
+
+#compteur-coups {
+    display: inline-block;
+    min-width: 25px;
+    font-weight: 700;
+}
+
+/* ==============================
    PLATEAU DE JEU
 ============================== */
 

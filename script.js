@@ -18,12 +18,15 @@ let nombreAnneaux = 0;
 let demoEnCours = false;
 let jetonDemo = 0;
 
+let nombreCoups = 0;
+
 // Éléments HTML
 const tours = document.querySelectorAll(".tour");
 const champNbAnneaux = document.querySelector("#nb-anneaux");
 const boutonDemarrer = document.querySelector("#btn-demarrer");
 const boutonDemo = document.querySelector("#btn-demo");
 const message = document.querySelector("#message");
+const compteurCoups = document.getElementById("compteur-coups");
 
 
 /* ==============================
@@ -130,6 +133,10 @@ function demarrer() {
     demoEnCours = false;
     boutonDemo.disabled = false;
 
+    // Réinitialisation du compteur de coups
+    nombreCoups = 0;
+    compteurCoups.textContent = nombreCoups;
+
     // Lecture du nombre d'anneaux
     let valeur = parseInt(champNbAnneaux.value, 10);
 
@@ -234,6 +241,11 @@ function cliquerTour(index) {
     const anneau = etatJeu[tourSelectionnee].pop();
 
     etatJeu[index].push(anneau);
+
+    // Increment du compteur de coups
+    nombreCoups++;
+    compteurCoups.textContent = nombreCoups;
+    
 
     // Réinitialisation de la sélection
     tourSelectionnee = null;
@@ -364,6 +376,10 @@ async function rejouer(coups) {
         const anneau = etatJeu[de].pop();
 
         etatJeu[vers].push(anneau);
+
+        // Increment du compteur de coups
+        nombreCoups++;
+        compteurCoups.textContent = nombreCoups;
 
         // Affichage de la progression
         message.textContent =
