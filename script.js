@@ -19,6 +19,9 @@ let tourSelectionnee = null;
 // Anneau actuellement sélectionné.
 let anneauSelectionne = null;
 
+// Tour dont le dépôt a été refusé.
+let tourInvalide = null;
+
 // Nombre initial d'anneaux.
 let nombreAnneaux = 3;
 
@@ -37,6 +40,50 @@ const boutonDemarrer = document.getElementById("btn-demarrer");
 const message = document.getElementById("message");
 
 // ==========================================
+// RÈGLE DE DÉPLACEMENT
+// ==========================================
+
+function deplacementValide(de, vers) {
+
+    // Vérification des indices des tours.
+    if (
+        de < 0 || de >= etatJeu.length ||
+        vers < 0 || vers >= etatJeu.length
+    ) {
+        return false;
+    }
+
+    // On ne peut pas déplacer un anneau vers sa tour d'origine.
+    if (de === vers) {
+        return false;
+    }
+
+    const tourOrigine = etatJeu[de];
+    const tourDestination = etatJeu[vers];
+
+    // La tour d'origine doit contenir au moins un anneau.
+    if (tourOrigine.length === 0) {
+        return false;
+    }
+
+    // Récupération du sommet de chaque tour.
+    const anneauDeplace = tourOrigine[tourOrigine.length - 1];
+
+    const anneauDestination =
+        tourDestination.length > 0
+            ? tourDestination[tourDestination.length - 1]
+            : null;
+
+    // Une tour vide accepte tous les anneaux.
+    if (anneauDestination === null) {
+        return true;
+    }
+
+    // Un grand anneau ne peut pas être posé sur un plus petit.
+    return anneauDeplace < anneauDestination;
+}
+
+// ==========================================
 // AFFICHAGE
 // ==========================================
 
@@ -53,8 +100,14 @@ function rendre() {
             tourSelectionnee === index
         );
 
+        // Affichage du dépôt refusé.
+        tour.classList.toggle(
+            "invalide",
+            tourInvalide === index
+        );
+
         // Création des anneaux à partir de l'état.
-        etatJeu[index].forEach(taille => {
+        etatJeu[index].forEach((taille, position) => {
 
             const anneau = document.createElement("div");
 
@@ -67,8 +120,11 @@ function rendre() {
             anneau.style.backgroundColor =
                 `hsl(${taille * 35}, 70%, 50%)`;
 
-            // Mise en évidence de l'anneau sélectionné.
+            // Seul l'anneau au sommet peut être sélectionné.
+            const estSommet = position === etatJeu[index].length - 1;
+
             if (
+                estSommet &&
                 tourSelectionnee === index &&
                 anneauSelectionne === taille
             ) {
@@ -111,8 +167,9 @@ function demarrer() {
     // Annulation d'une éventuelle sélection.
     tourSelectionnee = null;
     anneauSelectionne = null;
+    tourInvalide = null;
 
-    message.textContent = "Sélectionnez un anneau sur la première tour.";
+    message.textContent = "Sélectionnez l'anneau au sommet de la première tour.";
 
     rendre();
 }
@@ -125,17 +182,22 @@ function cliquerTour(index) {
 
     const pile = etatJeu[index];
 
+    // Réinitialisation du précédent retour visuel.
+    tourInvalide = null;
+
     // CAS 1 : aucune tour n'est sélectionnée.
     // On tente de sélectionner le sommet de la tour.
     if (tourSelectionnee === null) {
 
         if (pile.length === 0) {
             message.textContent = "Cette tour est vide.";
+            rendre();
             return;
         }
 
         tourSelectionnee = index;
 
+        // Seul le dernier élément de la pile est sélectionné.
         anneauSelectionne = pile[pile.length - 1];
 
         message.textContent =
@@ -162,34 +224,32 @@ function cliquerTour(index) {
 
     // CAS 3 : tentative de déplacement vers une autre tour.
 
-    const tourOrigine = etatJeu[tourSelectionnee];
+    // Vérification de la règle avant toute modification de l'état.
+    if (!deplacementValide(tourSelectionnee, index)) {
 
-    const anneauDeplace = tourOrigine[tourOrigine.length - 1];
-
-    // Récupération de l'anneau au sommet de la destination.
-    const anneauDestination =
-        pile.length > 0 ? pile[pile.length - 1] : null;
-
-    // Vérification de la règle :
-    // Un grand anneau ne peut pas être posé sur un petit.
-    if (
-        anneauDestination !== null &&
-        anneauDeplace > anneauDestination
-    ) {
+        // La destination est mise en évidence en rouge.
+        tourInvalide = index;
 
         message.textContent =
             "Déplacement impossible : un grand anneau ne peut pas être posé sur un plus petit.";
+
+        // L'état du jeu reste strictement inchangé.
+        rendre();
 
         return;
     }
 
     // Déplacement de l'anneau dans l'état du jeu.
-    tourOrigine.pop();
+    const tourOrigine = etatJeu[tourSelectionnee];
+
+    const anneauDeplace = tourOrigine.pop();
+
     pile.push(anneauDeplace);
 
     // Réinitialisation de la sélection.
     tourSelectionnee = null;
     anneauSelectionne = null;
+    tourInvalide = null;
 
     message.textContent = "Déplacement effectué !";
 
