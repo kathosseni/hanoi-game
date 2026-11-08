@@ -387,3 +387,18 @@ footer {
         transition: none !important;
     }
 }
+
+/* ==============================
+   ANIMATION DES ANNEAUX
+============================== */
+
+.anneau {
+    will-change: transform;
+}
+
+/* Respect des préférences de mouvement */
+@media (prefers-reduced-motion: reduce) {
+    .anneau {
+        transition: none;
+    }
+}
