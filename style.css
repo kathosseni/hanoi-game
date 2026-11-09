@@ -1,5 +1,101 @@
 
 /* ==============================
+   VARIABLES DU MODE CLAIR
+============================== */
+
+:root {
+    color-scheme: light;
+
+    --fond-page: linear-gradient(135deg, #e9e7ff, #dceeff);
+    --texte: #30304a;
+    --titre: #5144a5;
+    --texte-secondaire: #77758f;
+
+    --fond-jeu: rgba(255, 255, 255, 0.9);
+    --ombre-jeu: rgba(70, 60, 130, 0.12);
+
+    --fond-instructions: #f2f0ff;
+
+    --couleur-compteur: #6651a3;
+
+    --fond-plateau: transparent;
+    --bordure-plateau: #7773a5;
+
+    --fond-tour-selectionnee: rgba(130, 110, 230, 0.12);
+    --fond-tour-invalide: rgba(235, 75, 75, 0.12);
+
+    --tige-tour: linear-gradient(to right, #aaa3d2, #7770b4);
+
+    --nom-tour: #686580;
+
+    --fond-message: #f5f4ff;
+    --couleur-message: #5144a5;
+
+    --fond-input: #ffffff;
+    --texte-input: #30304a;
+    --bordure-input: #c8c2e8;
+
+    --fond-bouton: #7163c5;
+    --fond-bouton-hover: #5849ad;
+
+    --fond-reset: #8b849f;
+    --fond-reset-hover: #6e667f;
+
+    --couleur-footer: #77758f;
+
+    --fond-theme: rgba(255, 255, 255, 0.8);
+    --bordure-theme: #d7d2ef;
+}
+
+/* ==============================
+   VARIABLES DU MODE SOMBRE
+============================== */
+
+body[data-theme="dark"] {
+    color-scheme: dark;
+
+    --fond-page: linear-gradient(135deg, #17172c, #202c43);
+    --texte: #e6e5f5;
+    --titre: #c4baff;
+    --texte-secondaire: #aaa8c5;
+
+    --fond-jeu: rgba(36, 37, 61, 0.96);
+    --ombre-jeu: rgba(0, 0, 0, 0.3);
+
+    --fond-instructions: #30304e;
+
+    --couleur-compteur: #c0b5f5;
+
+    --fond-plateau: rgba(25, 26, 45, 0.35);
+    --bordure-plateau: #77739f;
+
+    --fond-tour-selectionnee: rgba(142, 125, 235, 0.18);
+    --fond-tour-invalide: rgba(235, 75, 75, 0.18);
+
+    --tige-tour: linear-gradient(to right, #8881b5, #5d588e);
+
+    --nom-tour: #c4c1dc;
+
+    --fond-message: #30304e;
+    --couleur-message: #c4baff;
+
+    --fond-input: #25263e;
+    --texte-input: #e6e5f5;
+    --bordure-input: #5a5780;
+
+    --fond-bouton: #8275d0;
+    --fond-bouton-hover: #9a8de5;
+
+    --fond-reset: #706a87;
+    --fond-reset-hover: #89819f;
+
+    --couleur-footer: #aaa8c5;
+
+    --fond-theme: rgba(43, 44, 70, 0.9);
+    --bordure-theme: #575477;
+}
+
+/* ==============================
    STYLE GÉNÉRAL
 ============================== */
 
@@ -11,8 +107,9 @@ body {
     margin: 0;
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-    color: #30304a;
-    background: linear-gradient(135deg, #e9e7ff, #dceeff);
+    color: var(--texte);
+    background: var(--fond-page);
+    transition: background 0.3s, color 0.3s;
 }
 
 /* ==============================
@@ -24,15 +121,44 @@ header {
     padding: 30px 15px 20px;
 }
 
+.entete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
 h1 {
     margin: 0;
-    color: #5144a5;
+    color: var(--titre);
     font-size: 2.4rem;
 }
 
 .sous-titre {
-    color: #77758f;
+    color: var(--texte-secondaire);
     margin-top: 10px;
+}
+
+/* ==============================
+   BOUTON MODE CLAIR / SOMBRE
+============================== */
+
+#btn-theme {
+    padding: 9px 15px;
+    border: 1px solid var(--bordure-theme);
+    border-radius: 20px;
+    background: var(--fond-theme);
+    color: var(--texte);
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s, transform 0.2s;
+}
+
+#btn-theme:hover {
+    background: var(--fond-instructions);
+    transform: translateY(-2px);
 }
 
 /* ==============================
@@ -48,9 +174,10 @@ h1 {
 
 .jeu {
     padding: 30px;
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--fond-jeu);
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(70, 60, 130, 0.12);
+    box-shadow: 0 10px 30px var(--ombre-jeu);
+    transition: background 0.3s, box-shadow 0.3s;
 }
 
 /* ==============================
@@ -63,8 +190,10 @@ h1 {
     gap: 12px;
     padding: 15px;
     margin-bottom: 30px;
-    background: #f2f0ff;
+    background: var(--fond-instructions);
     border-radius: 12px;
+    color: var(--texte);
+    transition: background 0.3s;
 }
 
 .instructions p {
@@ -84,7 +213,7 @@ h1 {
     margin: 15px 0;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #6651a3;
+    color: var(--couleur-compteur);
     text-align: center;
 }
 
@@ -102,7 +231,7 @@ h1 {
     margin: 10px 0 15px;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #6651a3;
+    color: var(--couleur-compteur);
     text-align: center;
 }
 
@@ -121,8 +250,10 @@ h1 {
     gap: 20px;
     min-height: 300px;
     padding: 20px 10px 0;
-    border-bottom: 7px solid #7773a5;
+    border-bottom: 7px solid var(--bordure-plateau);
     border-radius: 5px;
+    background: var(--fond-plateau);
+    transition: background 0.3s, border-color 0.3s;
 }
 
 .zone-tour {
@@ -146,6 +277,10 @@ h1 {
     font-weight: bold;
 }
 
+/* ==============================
+   TOURS
+============================== */
+
 .tour {
     display: flex;
     flex-direction: column-reverse;
@@ -168,24 +303,25 @@ h1 {
     width: 12px;
     height: 200px;
     transform: translateX(-50%);
-    background: linear-gradient(to right, #aaa3d2, #7770b4);
+    background: var(--tige-tour);
     border-radius: 8px 8px 0 0;
     z-index: 0;
+    pointer-events: none;
 }
 
 .tour.selectionnee {
-    background: rgba(130, 110, 230, 0.12);
+    background: var(--fond-tour-selectionnee);
     box-shadow: inset 0 0 0 3px #8878e8;
 }
 
 .tour.invalide {
-    background: rgba(235, 75, 75, 0.12);
+    background: var(--fond-tour-invalide);
     box-shadow: inset 0 0 0 3px #e85d5d;
 }
 
 .nom-tour {
     margin-top: 12px;
-    color: #686580;
+    color: var(--nom-tour);
     font-weight: bold;
 }
 
@@ -203,6 +339,7 @@ h1 {
     border-radius: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     transition: transform 0.2s, box-shadow 0.2s;
+    will-change: transform;
 }
 
 .anneau.selectionne {
@@ -222,14 +359,15 @@ h1 {
     margin-top: 20px;
     padding: 10px;
     text-align: center;
-    background: #f5f4ff;
+    background: var(--fond-message);
     border-radius: 10px;
+    transition: background 0.3s;
 }
 
 #message {
     margin: 0;
     font-weight: bold;
-    color: #5144a5;
+    color: var(--couleur-message);
     line-height: 1.5;
 }
 
@@ -257,13 +395,26 @@ h1 {
     font-weight: bold;
 }
 
+/* ==============================
+   CHAMP NOMBRE D'ANNEAUX
+============================== */
+
 #nb-anneaux {
     width: 65px;
     padding: 9px;
-    border: 1px solid #c8c2e8;
+    border: 1px solid var(--bordure-input);
     border-radius: 8px;
     font-size: 1rem;
     text-align: center;
+    color: var(--texte-input);
+    background: var(--fond-input);
+    outline: none;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+}
+
+#nb-anneaux:focus {
+    border-color: #9186dc;
+    box-shadow: 0 0 0 3px rgba(145, 134, 220, 0.2);
 }
 
 /* ==============================
@@ -280,7 +431,7 @@ button {
     padding: 11px 16px;
     border: none;
     border-radius: 9px;
-    background: #7163c5;
+    background: var(--fond-bouton);
     color: white;
     font-size: 0.95rem;
     font-weight: bold;
@@ -289,7 +440,7 @@ button {
 }
 
 button:hover:not(:disabled) {
-    background: #5849ad;
+    background: var(--fond-bouton-hover);
     transform: translateY(-2px);
 }
 
@@ -298,12 +449,14 @@ button:disabled {
     cursor: not-allowed;
 }
 
+/* BOUTON RESET */
+
 #btn-reset {
-    background: #8b849f;
+    background: var(--fond-reset);
 }
 
 #btn-reset:hover:not(:disabled) {
-    background: #6e667f;
+    background: var(--fond-reset-hover);
 }
 
 /* ==============================
@@ -313,7 +466,7 @@ button:disabled {
 footer {
     padding: 20px;
     text-align: center;
-    color: #77758f;
+    color: var(--couleur-footer);
 }
 
 /* ==============================
@@ -356,7 +509,8 @@ footer {
         flex-direction: column;
     }
 
-    button {
+    .parametres button,
+    .boutons button {
         width: 100%;
     }
 }
@@ -377,7 +531,9 @@ footer {
     }
 }
 
-/* Respect des préférences de mouvement */
+/* ==============================
+   ACCESSIBILITÉ
+============================== */
 
 @media (prefers-reduced-motion: reduce) {
 
@@ -385,20 +541,10 @@ footer {
     *::before,
     *::after {
         transition: none !important;
+        animation: none !important;
     }
-}
 
-/* ==============================
-   ANIMATION DES ANNEAUX
-============================== */
-
-.anneau {
-    will-change: transform;
-}
-
-/* Respect des préférences de mouvement */
-@media (prefers-reduced-motion: reduce) {
     .anneau {
-        transition: none;
+        transition: none !important;
     }
 }

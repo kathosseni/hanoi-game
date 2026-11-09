@@ -1,7 +1,98 @@
 
 /* ==========================================
-   STYLE 1 : ÉLÉGANT ET PASTEL
+   STYLE : ÉLÉGANT ET PASTEL
+   AVEC MODE CLAIR / MODE SOMBRE
 ========================================== */
+
+/* VARIABLES DU MODE CLAIR */
+
+:root {
+    color-scheme: light;
+
+    --fond: linear-gradient(135deg, #f5f3ff, #eef6ff);
+    --texte: #34415c;
+    --titre: #55518b;
+    --texte-secondaire: #9295ae;
+
+    --conteneur: rgba(255, 255, 255, 0.9);
+    --bordure-conteneur: #e9e5f5;
+    --ombre: rgba(100, 90, 150, 0.10);
+
+    --fond-instructions: #f0efff;
+    --texte-instructions: #7772a8;
+
+    --fond-plateau: #faf9ff;
+    --bordure-plateau: #efedf8;
+
+    --socle-tour: #aaa6ca;
+    --tige-tour: linear-gradient(to right, #aaa6ca, #d1cee5);
+
+    --tour-selectionnee: #eeeaff;
+    --tour-invalide: #ffe9ed;
+
+    --texte-numero: #b7b2d3;
+    --texte-nom-tour: #8582a4;
+
+    --message: #7772a8;
+
+    --fond-parametres: #f8f7ff;
+    --bordure-parametres: #efedf8;
+
+    --label: #7772a8;
+    --fond-input: white;
+    --texte-input: #55518b;
+    --bordure-input: #dcd8ee;
+
+    --fond-footer: #aaa5c4;
+
+    --fond-bouton-secondaire: #8b7bd8;
+}
+
+/* VARIABLES DU MODE SOMBRE */
+
+body[data-theme="dark"] {
+    color-scheme: dark;
+
+    --fond: linear-gradient(135deg, #171729, #202b40);
+    --texte: #e2e3f2;
+    --titre: #c7bfff;
+    --texte-secondaire: #a2a5c2;
+
+    --conteneur: rgba(35, 36, 57, 0.96);
+    --bordure-conteneur: #41415f;
+    --ombre: rgba(0, 0, 0, 0.25);
+
+    --fond-instructions: #30304e;
+    --texte-instructions: #c0b9f2;
+
+    --fond-plateau: #25263d;
+    --bordure-plateau: #41415f;
+
+    --socle-tour: #77739d;
+    --tige-tour: linear-gradient(to right, #77739d, #aaa5cf);
+
+    --tour-selectionnee: #39345e;
+    --tour-invalide: #512f43;
+
+    --texte-numero: #a5a0ca;
+    --texte-nom-tour: #c0bddb;
+
+    --message: #c0b9f2;
+
+    --fond-parametres: #2c2d48;
+    --bordure-parametres: #41415f;
+
+    --label: #c0b9f2;
+    --fond-input: #202139;
+    --texte-input: #e2e3f2;
+    --bordure-input: #555477;
+
+    --fond-footer: #8988a9;
+
+    --fond-bouton-secondaire: #7665c5;
+}
+
+/* RESET */
 
 * {
     margin: 0;
@@ -12,38 +103,74 @@
 body {
     min-height: 100vh;
     font-family: "Segoe UI", Arial, sans-serif;
-    background: linear-gradient(135deg, #f5f3ff, #eef6ff);
-    color: #34415c;
+    background: var(--fond);
+    color: var(--texte);
     padding: 35px 16px;
+    transition: background 0.3s, color 0.3s;
 }
+
+/* EN-TÊTE */
 
 header {
     text-align: center;
     margin-bottom: 30px;
 }
 
+.entete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
 h1 {
     font-size: clamp(27px, 5vw, 40px);
-    color: #55518b;
-    margin-bottom: 10px;
+    color: var(--titre);
     letter-spacing: -1px;
 }
 
 .sous-titre {
-    color: #9295ae;
+    color: var(--texte-secondaire);
     font-size: 15px;
 }
+
+/* BOUTON DU THÈME */
+
+#btn-theme {
+    padding: 9px 15px;
+    color: var(--texte);
+    background: var(--conteneur);
+    border: 1px solid var(--bordure-conteneur);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: none;
+    transition: background 0.25s, transform 0.2s;
+}
+
+#btn-theme:hover {
+    transform: translateY(-2px);
+    box-shadow: none;
+}
+
+/* CONTENEUR PRINCIPAL */
 
 .conteneur {
     width: 100%;
     max-width: 900px;
     margin: auto;
     padding: 30px;
-    background: rgba(255,255,255,0.9);
-    border: 1px solid #e9e5f5;
+    background: var(--conteneur);
+    border: 1px solid var(--bordure-conteneur);
     border-radius: 24px;
-    box-shadow: 0 15px 45px rgba(100, 90, 150, 0.10);
+    box-shadow: 0 15px 45px var(--ombre);
+    transition: background 0.3s, border-color 0.3s;
 }
+
+/* INSTRUCTIONS */
 
 .instructions {
     display: flex;
@@ -51,10 +178,10 @@ h1 {
     justify-content: center;
     gap: 12px;
     padding: 16px;
-    margin-bottom: 30px;
+    margin-bottom: 22px;
     border-radius: 14px;
-    background: #f0efff;
-    color: #7772a8;
+    background: var(--fond-instructions);
+    color: var(--texte-instructions);
     font-size: 14px;
     line-height: 1.5;
 }
@@ -62,6 +189,29 @@ h1 {
 .icone {
     font-size: 23px;
 }
+
+/* INFORMATIONS */
+
+.informations {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+    padding: 0 5px;
+    color: var(--message);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.compteur,
+.score {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+/* PLATEAU */
 
 #plateau {
     display: flex;
@@ -71,9 +221,10 @@ h1 {
     width: 100%;
     min-height: 320px;
     padding: 25px 10px 15px;
-    background: #faf9ff;
-    border: 1px solid #efedf8;
+    background: var(--fond-plateau);
+    border: 1px solid var(--bordure-plateau);
     border-radius: 18px;
+    transition: background 0.3s, border-color 0.3s;
 }
 
 .zone-tour {
@@ -85,7 +236,7 @@ h1 {
 }
 
 .numero-tour {
-    color: #b7b2d3;
+    color: var(--texte-numero);
     font-size: 12px;
     font-weight: bold;
     margin-bottom: 10px;
@@ -93,18 +244,20 @@ h1 {
 
 .nom-tour {
     margin-top: 15px;
-    color: #8582a4;
+    color: var(--texte-nom-tour);
     font-size: 13px;
     font-weight: 600;
     text-align: center;
 }
+
+/* TOURS */
 
 .tour {
     position: relative;
     width: 100%;
     max-width: 220px;
     height: 220px;
-    border-bottom: 10px solid #aaa6ca;
+    border-bottom: 10px solid var(--socle-tour);
     border-radius: 5px;
     display: flex;
     flex-direction: column-reverse;
@@ -119,14 +272,14 @@ h1 {
     bottom: 0;
     width: 9px;
     height: 200px;
-    background: linear-gradient(to right, #aaa6ca, #d1cee5);
+    background: var(--tige-tour);
     border-radius: 6px 6px 0 0;
     z-index: 0;
     pointer-events: none;
 }
 
 .tour.selectionnee {
-    background: #eeeaff;
+    background: var(--tour-selectionnee);
     border-bottom-color: #8175d8;
 }
 
@@ -135,7 +288,7 @@ h1 {
 }
 
 .tour.invalide {
-    background: #ffe9ed;
+    background: var(--tour-invalide);
     border-bottom-color: #e87991;
 }
 
@@ -143,25 +296,30 @@ h1 {
     background: #e87991;
 }
 
+/* ANNEAUX */
+
 .anneau {
     position: relative;
     z-index: 1;
     height: 20px;
     max-width: 95%;
     flex-shrink: 0;
-    border: 2px solid rgba(255,255,255,0.8);
+    border: 2px solid rgba(255, 255, 255, 0.8);
     border-radius: 12px;
     cursor: pointer;
-    box-shadow: 0 3px 6px rgba(70,60,120,0.15);
+    box-shadow: 0 3px 6px rgba(70, 60, 120, 0.15);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    will-change: transform;
 }
 
 .anneau.selectionne {
     transform: translateY(-12px) scale(1.06);
     outline: 3px solid #766bc7;
     outline-offset: 3px;
-    box-shadow: 0 8px 16px rgba(118,107,199,0.3);
+    box-shadow: 0 8px 16px rgba(118, 107, 199, 0.3);
 }
+
+/* MESSAGE */
 
 .zone-message {
     min-height: 65px;
@@ -173,11 +331,13 @@ h1 {
 }
 
 #message {
-    color: #7772a8;
+    color: var(--message);
     font-size: 14px;
     font-weight: 600;
     line-height: 1.5;
 }
+
+/* PARAMÈTRES */
 
 .parametres {
     display: flex;
@@ -186,9 +346,10 @@ h1 {
     gap: 20px;
     flex-wrap: wrap;
     padding: 22px;
-    background: #f8f7ff;
-    border: 1px solid #efedf8;
+    background: var(--fond-parametres);
+    border: 1px solid var(--bordure-parametres);
     border-radius: 16px;
+    transition: background 0.3s, border-color 0.3s;
 }
 
 .parametre {
@@ -198,27 +359,31 @@ h1 {
 }
 
 label {
-    color: #7772a8;
+    color: var(--label);
     font-size: 13px;
     font-weight: 600;
 }
+
+/* CHAMP DE SAISIE */
 
 input {
     width: 100px;
     padding: 11px;
     font-size: 16px;
     text-align: center;
-    color: #55518b;
-    background: white;
-    border: 1px solid #dcd8ee;
+    color: var(--texte-input);
+    background: var(--fond-input);
+    border: 1px solid var(--bordure-input);
     border-radius: 9px;
     outline: none;
 }
 
 input:focus {
     border-color: #9186dc;
-    box-shadow: 0 0 0 3px rgba(145,134,220,0.15);
+    box-shadow: 0 0 0 3px rgba(145, 134, 220, 0.15);
 }
+
+/* BOUTONS */
 
 button {
     padding: 12px 25px;
@@ -229,27 +394,43 @@ button {
     font-size: 15px;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 5px 12px rgba(116,104,189,0.2);
+    box-shadow: 0 5px 12px rgba(116, 104, 189, 0.2);
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-button:hover {
+button:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 8px 18px rgba(116,104,189,0.3);
+    box-shadow: 0 8px 18px rgba(116, 104, 189, 0.3);
 }
 
-button:active {
+button:active:not(:disabled) {
     transform: scale(0.97);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 button span {
     margin-right: 5px;
 }
 
+#btn-demo {
+    padding: 12px 20px;
+    border-radius: 12px;
+    background: var(--fond-bouton-secondaire);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* FOOTER */
+
 footer {
     margin-top: 25px;
     text-align: center;
-    color: #aaa5c4;
+    color: var(--fond-footer);
     font-size: 12px;
 }
 
@@ -276,6 +457,10 @@ footer {
     .tour::before {
         height: 170px;
     }
+
+    .parametres {
+        gap: 14px;
+    }
 }
 
 @media (max-width: 450px) {
@@ -286,6 +471,10 @@ footer {
     .conteneur {
         padding: 14px 8px;
         border-radius: 15px;
+    }
+
+    .entete {
+        gap: 12px;
     }
 
     .instructions {
@@ -318,6 +507,10 @@ footer {
         font-size: 10px;
     }
 
+    .informations {
+        font-size: 13px;
+    }
+
     .parametres {
         gap: 12px;
         padding: 15px 8px;
@@ -333,31 +526,17 @@ footer {
     }
 }
 
+/* ACCESSIBILITÉ : RÉDUCTION DES ANIMATIONS */
+
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
         transition: none !important;
         animation: none !important;
     }
-}
 
-#btn-demo {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 12px;
-    background: #8b7bd8;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.2s;
-}
-
-#btn-demo:hover:not(:disabled) {
-    background: #7665c5;
-    transform: translateY(-2px);
-}
-
-#btn-demo:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    .anneau {
+        transition: none !important;
+    }
 }
