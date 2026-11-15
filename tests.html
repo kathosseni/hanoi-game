@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tests — Les tours de Hanoï</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    #bilan { font-size: 1.2rem; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <h1>Tests — Les tours de Hanoï</h1>
+  <p>Ouvre la console du navigateur (F12) pour voir le détail de chaque test.</p>
+  <p id="bilan">Tests en cours…</p>
+
+  <!--
+    Éléments dont script.js a besoin pour s'initialiser (il les cherche au chargement).
+    Ils sont cachés : cette page ne sert qu'à tester la logique.
+    Les classes « pile pile-anneaux », « base-tour » et l'élément « coups-minimum »
+    couvrent aussi la variante de script.js qui utilise ces noms.
+  -->
+  <div hidden>
+    <button id="btn-theme" type="button" aria-pressed="false"></button>
+    <input type="number" id="nb-anneaux" min="1" max="8" value="3">
+    <button id="btn-demarrer" type="button"></button>
+    <button id="btn-demo" type="button"></button>
+    <button id="btn-reset" type="button"></button>
+    <span id="compteur-coups">0</span>
+    <span id="libelle-score">Score</span>
+    <span id="score">—</span>
+    <span id="coups-minimum">7</span>
+    <p id="message" aria-live="polite"></p>
+    <section id="plateau">
+      <div id="tour-1" class="zone-tour" data-index="0"><div class="pile pile-anneaux"></div><div class="tige"></div><div class="base-tour"></div></div>
+      <div id="tour-2" class="zone-tour" data-index="1"><div class="pile pile-anneaux"></div><div class="tige"></div><div class="base-tour"></div></div>
+      <div id="tour-3" class="zone-tour" data-index="2"><div class="pile pile-anneaux"></div><div class="tige"></div><div class="base-tour"></div></div>
+    </section>
+  </div>
+
+  <!-- L'ordre compte : le jeu d'abord, les tests ensuite -->
+  <script src="script.js"></script>
+  <script src="tests.js"></script>
+</body>
+</html>

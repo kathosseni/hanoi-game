@@ -1,4 +1,3 @@
-
 /* ==========================================
    JEU DES TOURS DE HANOÏ
    MODE CLAIR / SOMBRE
@@ -54,6 +53,12 @@ const libelleScore = document.querySelector("#libelle-score");
    MODE CLAIR / SOMBRE
 ========================================== */
 
+/**
+ * Initialise le thème de l'interface au chargement de la page.
+ * Utilise en priorité le thème sauvegardé dans le localStorage,
+ * sinon la préférence du système (clair ou sombre).
+ * @returns {void}
+ */
 function initialiserTheme() {
     const themeSauvegarde = localStorage.getItem("theme-hanoi");
 
@@ -67,6 +72,12 @@ function initialiserTheme() {
     appliquerTheme(themeInitial);
 }
 
+/**
+ * Applique un thème à la page, met à jour le bouton de bascule
+ * et sauvegarde le choix dans le localStorage.
+ * @param {"light"|"dark"} theme Thème à appliquer.
+ * @returns {void}
+ */
 function appliquerTheme(theme) {
     const sombre = theme === "dark";
 
@@ -81,6 +92,10 @@ function appliquerTheme(theme) {
     localStorage.setItem("theme-hanoi", theme);
 }
 
+/**
+ * Bascule entre le mode clair et le mode sombre.
+ * @returns {void}
+ */
 function basculerTheme() {
     const themeActuel = document.body.dataset.theme;
 
@@ -96,8 +111,18 @@ function basculerTheme() {
    VALIDATION D'UN DÉPLACEMENT
 ========================================== */
 
+/**
+ * Vérifie si le déplacement de l'anneau supérieur d'une tour vers une autre
+ * respecte les règles du jeu (tours existantes, tour de départ non vide,
+ * pas de grand anneau posé sur un plus petit).
+ * @param {number} de Tour de départ (0, 1 ou 2).
+ * @param {number} vers Tour d'arrivée (0, 1 ou 2).
+ * @returns {boolean} true si le déplacement est autorisé, false sinon.
+ */
 function deplacementValide(de, vers) {
     if (
+        !Number.isInteger(de) ||
+        !Number.isInteger(vers) ||
         de < 0 ||
         de > 2 ||
         vers < 0 ||
@@ -127,6 +152,11 @@ function deplacementValide(de, vers) {
    AFFICHAGE DU JEU
 ========================================== */
 
+/**
+ * Redessine les trois tours et leurs anneaux à partir de l'état du jeu,
+ * en appliquant les classes de sélection et d'invalidité.
+ * @returns {void}
+ */
 function rendre() {
     tours.forEach((tour, index) => {
         tour.innerHTML = "";
@@ -177,6 +207,11 @@ function rendre() {
    SCORE
 ========================================== */
 
+/**
+ * Calcule le score en pourcentage : rapport entre le nombre minimal de coups
+ * (2^n - 1) et le nombre de coups joués. Met à jour la variable globale score.
+ * @returns {void}
+ */
 function calculerScore() {
     if (nombreCoups === 0 || nombreAnneaux === 0) {
         score = 0;
@@ -188,6 +223,10 @@ function calculerScore() {
     score = (minimum / nombreCoups) * 100;
 }
 
+/**
+ * Affiche le score à l'écran, ou un tiret tant qu'aucun coup n'a été joué.
+ * @returns {void}
+ */
 function afficherScore() {
     if (nombreCoups === 0) {
         affichageScore.textContent = "—";
@@ -199,6 +238,11 @@ function afficherScore() {
     affichageScore.textContent = score.toFixed(1) + " %";
 }
 
+/**
+ * Enregistre un coup : incrémente le compteur, met à jour son affichage
+ * ainsi que le score.
+ * @returns {void}
+ */
 function enregistrerCoup() {
     nombreCoups++;
 
@@ -212,6 +256,11 @@ function enregistrerCoup() {
    ANNULATION D'UNE ANIMATION
 ========================================== */
 
+/**
+ * Annule l'animation en cours : invalide le jeton d'animation, arrête
+ * l'animation, supprime le clone animé et rétablit l'anneau cible masqué.
+ * @returns {void}
+ */
 function annulerAnimation() {
     jetonAnimation++;
 
@@ -238,6 +287,16 @@ function annulerAnimation() {
    DÉPLACEMENT AVEC ANIMATION
 ========================================== */
 
+/**
+ * Déplace l'anneau supérieur d'une tour vers une autre, en mettant à jour
+ * l'état du jeu puis en animant un clone de l'anneau (montée, translation
+ * horizontale, descente).
+ * @async
+ * @param {number} de Tour de départ (0, 1 ou 2).
+ * @param {number} vers Tour d'arrivée (0, 1 ou 2).
+ * @returns {Promise<boolean>} true si le déplacement a été effectué et
+ * l'animation menée à terme, false s'il est invalide ou a été annulé.
+ */
 async function deplacerAvecAnimation(de, vers) {
     if (!deplacementValide(de, vers)) {
         return false;
@@ -377,6 +436,12 @@ async function deplacerAvecAnimation(de, vers) {
    DÉMARRER UNE PARTIE
 ========================================== */
 
+/**
+ * Démarre une nouvelle partie : annule toute animation ou démonstration,
+ * lit le nombre d'anneaux (borné entre 1 et 8), réinitialise l'état,
+ * les compteurs et l'affichage.
+ * @returns {void}
+ */
 function demarrer() {
     annulerAnimation();
 
@@ -426,6 +491,14 @@ function demarrer() {
    CLIC SUR UNE TOUR
 ========================================== */
 
+/**
+ * Gère le clic sur une tour : sélectionne l'anneau supérieur, annule la
+ * sélection, ou tente de déplacer l'anneau sélectionné vers la tour cliquée.
+ * Ne fait rien pendant une démonstration, une animation ou après la victoire.
+ * @async
+ * @param {number} index Index de la tour cliquée (0, 1 ou 2).
+ * @returns {Promise<void>}
+ */
 async function cliquerTour(index) {
     if (
         demoEnCours ||
@@ -507,9 +580,26 @@ async function cliquerTour(index) {
    RÉSOLUTION AUTOMATIQUE
 ========================================== */
 
+/**
+ * Calcule la liste des coups qui déplace n anneaux d'une tour à une autre.
+ * @param {number} n Nombre d'anneaux à déplacer.
+ * @param {number} depart Tour de départ (0, 1 ou 2).
+ * @param {number} arrivee Tour d'arrivée.
+ * @param {number} intermediaire Tour intermédiaire.
+ * @returns {number[][]} Liste de couples [de, vers], dans l'ordre d'exécution.
+ */
 function resoudre(n, depart, arrivee, intermediaire) {
     const coups = [];
 
+    /**
+     * Fonction récursive interne : ajoute à la liste les coups nécessaires
+     * pour déplacer n anneaux de la tour « de » vers la tour « vers ».
+     * @param {number} n Nombre d'anneaux à déplacer.
+     * @param {number} de Tour de départ.
+     * @param {number} vers Tour d'arrivée.
+     * @param {number} via Tour intermédiaire.
+     * @returns {void}
+     */
     function deplacer(n, de, vers, via) {
         if (n === 0) {
             return;
@@ -532,6 +622,11 @@ function resoudre(n, depart, arrivee, intermediaire) {
    PAUSE
 ========================================== */
 
+/**
+ * Attend un délai donné avant de poursuivre.
+ * @param {number} delai Durée de la pause, en millisecondes.
+ * @returns {Promise<void>} Promesse résolue à la fin du délai.
+ */
 function attendre(delai) {
     return new Promise(resolve => setTimeout(resolve, delai));
 }
@@ -541,6 +636,17 @@ function attendre(delai) {
    EXÉCUTION DE LA DÉMONSTRATION
 ========================================== */
 
+/**
+ * Rejoue une suite de coups avec animation, en s'interrompant si la
+ * démonstration est annulée (jeton périmé), si un coup est invalide
+ * ou si une animation est annulée.
+ * @async
+ * @param {number[][]} coups Liste de couples [de, vers] à exécuter.
+ * @param {number} monJetonDemo Jeton de la démonstration en cours, comparé
+ * au jeton global pour détecter une annulation.
+ * @returns {Promise<boolean>} true si tous les coups ont été joués,
+ * false si la démonstration a été interrompue.
+ */
 async function rejouer(coups, monJetonDemo) {
     for (let i = 0; i < coups.length; i++) {
         if (
@@ -584,6 +690,12 @@ async function rejouer(coups, monJetonDemo) {
    LANCER LA DÉMONSTRATION
 ========================================== */
 
+/**
+ * Lance la démonstration automatique : démarre une nouvelle partie,
+ * calcule la solution optimale puis la rejoue avec animation.
+ * @async
+ * @returns {Promise<void>}
+ */
 async function lancerDemo() {
     demarrer();
 
@@ -621,6 +733,11 @@ async function lancerDemo() {
    VÉRIFICATION DE LA VICTOIRE
 ========================================== */
 
+/**
+ * Vérifie si tous les anneaux sont sur la troisième tour. Si oui, termine
+ * la partie, affiche le score final et un message de félicitations.
+ * @returns {boolean} true si la partie est gagnée, false sinon.
+ */
 function verifierVictoire() {
     if (
         nombreAnneaux > 0 &&
@@ -652,6 +769,12 @@ function verifierVictoire() {
    RESET
 ========================================== */
 
+/**
+ * Réinitialise la partie en cours : annule animation et démonstration,
+ * replace tous les anneaux sur la première tour et remet à zéro les
+ * compteurs et l'affichage.
+ * @returns {void}
+ */
 function reset() {
     annulerAnimation();
 
